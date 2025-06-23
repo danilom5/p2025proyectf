@@ -1,20 +1,36 @@
-#Ambiente
-#grilla: matriz que representa el entorno.
-#nutrientes: cantidad de nutrientes por celda.
-#factor ambiental: puede representar antibi´oticos u otras presiones.
-#M´etodos: actualizar nutrientes(), difundir nutrientes(), aplicar ambiente().
-
 class Ambiente:
     def __init__(self, ancho, alto, nivel_nutriente=100):
-        self.grilla = [[None for _ in range(ancho)] for _ in range(alto)]
-        self.nutrientes = [[nivel_nutriente for _ in range(ancho)] for _ in range(alto)]
-        self.factor_ambiental = None  # ej: antibióticos
+        """
+        Constructor del ambiente donde vivirán las bacterias.
+        Se crean dos matrices: una para la grilla (con None al inicio)
+        y otra para los nutrientes en cada celda.
+        """
 
-    def actualizar_nutrientes(self):
-        pass
+        # Guardamos las dimensiones del ambiente
+        self.ancho = ancho
+        self.alto = alto
 
-    def difundir_nutrientes(self):
-        pass
+        # Creamos la grilla (una matriz vacía de bacterias)    es una matriz llena de none
+        self.grilla = []  # esto será una lista de listas
+        for fila in range(alto):
+            fila_actual = []  # esta lista representará una fila
+            for columna in range(ancho):
+                fila_actual.append(None)  # ninguna bacteria al inicio
+            self.grilla.append(fila_actual)
 
-    def aplicar_ambiente(self):
-        pass
+        # Creamos la matriz de nutrientes      en vez de none como la de arriba, esta sera con los nutrientes, va con numeros
+        self.nutrientes = []  # otra lista de listas
+        for fila in range(alto):
+            fila_nutrientes = []
+            for columna in range(ancho):
+                fila_nutrientes.append(nivel_nutriente)  # cada celda parte con 100 por defecto
+            self.nutrientes.append(fila_nutrientes)
+
+        # por ahora queda en none
+        self.factor_ambiental = None
+
+        # lo mismo, pero la dejaré creada
+        self.colonia = None
+
+#---------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------
