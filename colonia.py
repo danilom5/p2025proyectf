@@ -34,6 +34,31 @@ class Colonia:
                 if bacteria.estado == "activa":
                     bacteria.dividirse(self.ambiente, self.bacterias) #solo se divide si sigue viva 
 
+#----------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------
+    def reporte_estado(self):
+    #contar las bacterias
+        total = len(self.bacterias)
+        activas = 0
+        muertas = 0
+        resistentes = 0
+
+        for b in self.bacterias:
+            if b.estado == "activa":
+                activas += 1
+                if b.resistente:
+                    resistentes += 1
+            elif b.estado == "muerta":
+                muertas += 1
+
+        print("----- REPORTE DE ESTADO DE LA COLONIA -----")
+        print(f"total de bacterias: {total}")
+        print(f"bacterias activas: {activas}")
+        print(f"bacterias muertas: {muertas}")
+        print(f"bacterias resistentes: {resistentes}")
+        print("-------------------------------------------")
+
+
 
 
 
