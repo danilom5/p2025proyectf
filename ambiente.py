@@ -1,3 +1,7 @@
+from bacteria import Bacteria
+from colonia import Colonia
+import random
+
 class Ambiente:
     def __init__(self, ancho, alto, nivel_nutriente=100):
         """
@@ -34,3 +38,46 @@ class Ambiente:
 
 #---------------------------------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------------------------------
+    def inicializar_bacterias(self, cantidad):
+        """
+        Crea una cantidad de bacterias activas y las distribuye aleatoriamente
+        en la grilla. Luego, crea una colonia con esas bacterias.
+        """
+
+        # Lista donde guardaremos todas las bacterias creadas
+        lista_bacterias = []
+
+        # Bucle hasta colocar la cantidad solicitada
+        colocadas = 0
+        while colocadas < cantidad:
+            # Elegimos una posición aleatoria dentro de los límites
+            fila = random.randint(0, self.alto - 1)
+            columna = random.randint(0, self.ancho - 1)
+
+            # Verificamos que la celda esté vacía
+            if self.grilla[fila][columna] is None:
+                # Generamos un ID para esta bacteria
+                id_bacteria = f"b{colocadas + 1}"
+
+                # Creamos la bacteria con energía = 50 y raza "A"
+                nueva = Bacteria(id_bacteria, "A", 50, fila, columna)
+
+                # La ponemos en la grilla
+                self.grilla[fila][columna] = nueva
+
+                # La agregamos a la lista de bacterias
+                lista_bacterias.append(nueva)
+
+                # Aumentamos el contador
+                colocadas += 1
+
+        # Creamos la colonia con este ambiente
+        self.colonia = Colonia(self)
+
+        # Le asignamos la lista de bacterias
+        self.colonia.bacterias = lista_bacterias
+
+        print(f"Se inicializaron {cantidad} bacterias activas en el ambiente.")
+
+#----------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------
