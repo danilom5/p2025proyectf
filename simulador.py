@@ -2,7 +2,7 @@
 #Controla los pasos de simulaci´on e inicializa los valores.
 #M´etodos: run(pasos), graficar crecimiento(), graficar resistencia().
 
-from colonia import Colonia
+#from colonia import Colonia
 
 class Simulador:
     def __init__(self, colonia):
@@ -17,3 +17,4 @@ class Simulador:
 
     def graficar_resistencia(self):
         pass
+    #o otros
