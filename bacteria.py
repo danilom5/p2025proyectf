@@ -1,5 +1,6 @@
+import random
 class Bacteria:
-    def __init__(self, id_bacteria, raza, energia, fila, columna, resistente=False):
+    def __init__(self, id_bacteria, raza, energia, fila, columna,ambiente,resistente=False):
         """
         Constructor de Bacteria.
         - id_bacteria: Identificador unico para rastrear la bacteria (ej: b1,b2, o cualquier otro, para diferenciarse de una en otra).
@@ -17,11 +18,12 @@ class Bacteria:
         # Ubicación espacial en la grilla del ambiente
         self.fila = fila
         self.columna = columna
+        self.ambiente = ambiente # guarda el ambiente donde vive
 
 #-------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------
 
-    def alimentar(self, ambiente):
+    def alimentar(self):
         """
         Permite a la bacteria alimentarse desde el ambiente.
         - Se accede a la celda del ambiente en la que se encuentra usando fila y columna.
@@ -36,19 +38,15 @@ class Bacteria:
             return
 
         # Obtener nutrientes en su celda actual
-        nutrientes_disponibles = ambiente.nutrientes[self.fila][self.columna]
+        nutrientes_disponibles = self.ambiente.nutrientes[self.fila][self.columna]
 
             
         # Nutrientes que desea consumir (entre 15 y 25)
-        import random
         cantidad_deseada = random.randint(15, 25)
-
         # No puede consumir más de lo que hay
         cantidad_real = min(cantidad_deseada, nutrientes_disponibles)
-
         # Quitar nutrientes del ambiente
-        ambiente.nutrientes[self.fila][self.columna] -= cantidad_real
-
+        self.ambiente.nutrientes[self.fila][self.columna] -= cantidad_real
         # Aumentar energía de la bacteria
         self.energia += cantidad_real
 
@@ -58,6 +56,15 @@ class Bacteria:
         if self.energia < 10:
             print(f"{self.id} tiene energía muy baja ({self.energia}). Morirá por inanición.")
             self.morir()    
+
+    def morir(self):
+        """
+        Cambia el estado de la bacteria a 'muerta'.
+        Esto evita que se siga alimentando o dividiendo.
+        """
+        self.estado = "muerta"
+        print(f"{self.id} ha muerto.")
+
 
 #-------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------
@@ -74,7 +81,6 @@ class Bacteria:
             print(f"{self.id} no puede mutar porque está {self.estado}.")
             return
 
-        import random
         probabilidad_mutacion = 0.05  # 5%
 
         numero_azar = random.random()  # número entre 0.0 y 1.0
@@ -88,7 +94,7 @@ class Bacteria:
 #----------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------
 
-    def dividirse(self, ambiente, lista_bacterias):
+    def dividirse(self, lista_bacterias):
         """
         Simula la división celular por mitosis.
         - Solo se divide si la energía ≥ 70.
@@ -109,7 +115,7 @@ class Bacteria:
             return
 
         # Buscar celdas vecinas vacías
-        posiciones_vecinas = self.obtener_vecinas_libres(ambiente)
+        posiciones_vecinas = self.obtener_vecinas_libres()
 
         if not posiciones_vecinas:
             print(f"{self.id} no puede dividirse porque no hay espacio alrededor.")
@@ -123,7 +129,6 @@ class Bacteria:
         # self.id es el ID de la madre
         # len(lista_bacterias) cuenta cuántas bacterias hay actualmente.
         # Le suma 1 para generar un número nuevo y no repetido.
-        # f"texto{variable}" es una f-string: una forma moderna y clara de armar cadenas.
         nuevo_id = f"{self.id}-h{len(lista_bacterias) + 1}" #SI LA MADRE FUERA B4 Y HUBIERAN 10 BACTERIAS, 
                                                             #nuevo_id = f"b4-h11"  # hija número 11 creada por b4
 
@@ -139,7 +144,7 @@ class Bacteria:
         hija.mutar()
 
         # Poner a la hija en la grilla
-        ambiente.grilla[fila_hija][col_hija] = hija
+        self.ambiente.grilla[fila_hija][col_hija] = hija
 
         # Agregar a la lista de bacterias del sistema
         lista_bacterias.append(hija)
@@ -149,7 +154,7 @@ class Bacteria:
 #--------------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------
 
-    def obtener_vecinas_libres(self, ambiente):
+    def obtener_vecinas_libres(self):
 
     # Busca celdas vecinas (arriba, abajo, izquierda, derecha) que estén vacías.
     # Retorna una lista con las coordenadas disponibles para ubicar una hija.
@@ -157,37 +162,37 @@ class Bacteria:
         vecinas = []
 
         # Obtenemos el tamaño de la grilla
-        cantidad_filas = len(ambiente.grilla)
-        cantidad_columnas = len(ambiente.grilla[0])
+        cantidad_filas = len(self.ambiente.grilla)
+        cantidad_columnas = len(self.ambiente.grilla[0])
 
         # Revisar celda de arriba
         nueva_fila = self.fila - 1
         nueva_columna = self.columna
         if nueva_fila >= 0:
-            if ambiente.grilla[nueva_fila][nueva_columna] is None:
+            if self.ambiente.grilla[nueva_fila][nueva_columna] is None:
                 vecinas.append((nueva_fila, nueva_columna))
 
         # Revisar celda de abajo
         nueva_fila = self.fila + 1
         nueva_columna = self.columna
         if nueva_fila < cantidad_filas:
-            if ambiente.grilla[nueva_fila][nueva_columna] is None:
+            if self.ambiente.grilla[nueva_fila][nueva_columna] is None:
                 vecinas.append((nueva_fila, nueva_columna))
 
         # Revisar celda a la izquierda
         nueva_fila = self.fila
         nueva_columna = self.columna - 1
         if nueva_columna >= 0:
-            if ambiente.grilla[nueva_fila][nueva_columna] is None:
+            if self.ambiente.grilla[nueva_fila][nueva_columna] is None:
                 vecinas.append((nueva_fila, nueva_columna))
 
         # Revisar celda a la derecha
         nueva_fila = self.fila
         nueva_columna = self.columna + 1
         if nueva_columna < cantidad_columnas:
-            if ambiente.grilla[nueva_fila][nueva_columna] is None:
+            if self.ambiente.grilla[nueva_fila][nueva_columna] is None:
                 vecinas.append((nueva_fila, nueva_columna))
-
+                        
         return vecinas
 
 #-------------------------------------------------------------------------------------------------------------------
