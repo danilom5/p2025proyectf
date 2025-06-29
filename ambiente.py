@@ -81,3 +81,88 @@ class Ambiente:
 
 #----------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------
+
+    def actualizar_nutrientes(self, cantidad=5, maximo=100):
+        # recorre cada celda del ambiente
+        # y suma nutrientes, sin pasarse del maximo
+
+        for i in range(self.alto):
+            for j in range(self.ancho):
+                actual = self.nutrientes[i][j]
+                nuevo = min(actual + cantidad, maximo)
+                self.nutrientes[i][j] = nuevo
+
+#----------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------
+  
+    def difundir_nutrientes(self):
+        # reparte parte de los nutrientes de una celda a sus 4 vecinos
+        # estilo similar a buscar vecinas libres
+
+        nueva = []
+
+        for i in range(self.alto):
+            fila = []
+            for j in range(self.ancho):
+                fila.append(0)
+            nueva.append(fila)
+
+        for fila in range(self.alto):
+            for col in range(self.ancho):
+
+                total = self.nutrientes[fila][col]
+                porcion = total // 5  # 1/5 por vecino
+
+                nueva[fila][col] += total - porcion * 4  # lo que queda
+
+                # arriba
+                nueva_fila = fila - 1
+                nueva_col = col
+                if nueva_fila >= 0:
+                    nueva[nueva_fila][nueva_col] += porcion
+
+                # abajo
+                nueva_fila = fila + 1
+                if nueva_fila < self.alto:
+                    nueva[nueva_fila][nueva_col] += porcion
+
+                # izquierda
+                nueva_fila = fila
+                nueva_col = col - 1
+                if nueva_col >= 0:
+                    nueva[nueva_fila][nueva_col] += porcion
+
+                # derecha
+                nueva_col = col + 1
+                if nueva_col < self.ancho:
+                    nueva[nueva_fila][nueva_col] += porcion
+
+        self.nutrientes = nueva
+
+#----------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------
+
+    def aplicar_ambiente(self):
+        # cada celda tiene 10% de tener antibiotico
+        # si hay una bacteria y no es resistente, tiene 85% de morir
+
+        for fila in range(self.alto):
+            for col in range(self.ancho):
+
+                celda = self.grilla[fila][col]
+
+                if celda and celda.estado == "activa":
+
+                    tiene_antibiotico = random.random() < 0.1
+
+                    if tiene_antibiotico:
+                        if not celda.resistente:
+                            if random.random() > 0.15:
+                                celda.morir()
+                                print(f"{celda.id} murio por antibiotico en ({fila},{col})")
+                            else:
+                                print(f"{celda.id} sobrevivio al antibiotico en ({fila},{col})")
+                        else:
+                            print(f"{celda.id} es resistente y sobrevive en ({fila},{col})")
+
+
