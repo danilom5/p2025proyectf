@@ -122,7 +122,6 @@ class Bacteria:
             return
 
         # Elegir una posición aleatoria entre las vecinas vacías
-        import random
         fila_hija, col_hija = random.choice(posiciones_vecinas)
 
         # Generar ID para la hija
@@ -138,7 +137,7 @@ class Bacteria:
         self.energia -= energia_hija
 
         # Crear bacteria hija (igual raza)
-        hija = Bacteria(nuevo_id, self.raza, energia_hija, fila_hija, col_hija)
+        hija = Bacteria(nuevo_id, self.raza, energia_hija, fila_hija, col_hija, self.ambiente)
 
         # Aplicar mutación a la hija
         hija.mutar()

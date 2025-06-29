@@ -60,7 +60,7 @@ class Ambiente:
                 id_bacteria = f"b{colocadas + 1}"
 
                 # Creamos la bacteria con energía = 50 y raza "A"
-                nueva = Bacteria(id_bacteria, "A", 50, fila, columna)
+                nueva = Bacteria(id_bacteria, "A", 50, fila, columna, self)
 
                 # La ponemos en la grilla
                 self.grilla[fila][columna] = nueva
@@ -71,14 +71,8 @@ class Ambiente:
                 # Aumentamos el contador
                 colocadas += 1
 
-        # Creamos la colonia con este ambiente
-        self.colonia = Colonia(self)
-
-        # Le asignamos la lista de bacterias
-        self.colonia.bacterias = lista_bacterias
-
         print(f"Se inicializaron {cantidad} bacterias activas en el ambiente.")
-
+        return lista_bacterias
 #----------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------
 

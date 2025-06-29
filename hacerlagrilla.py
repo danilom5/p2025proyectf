@@ -2,17 +2,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Patch
 import matplotlib
-matplotlib.use("Agg")  # para que no abra ventanas extras y tire error
+matplotlib.use("Agg")
 
-
-def generar_imagen_grilla(ruta_salida, grilla):
-
-    grilla = np.array(grilla)
-
-
-
-                                   # 5 indica que se quieren 5 colores diferentes (para los valores 0–4)
-    cmap = plt.cm.get_cmap("Set1", 5) #Set1 es una paleta de colores con 5 categorías distintas.
+def generar_imagen_grilla(grilla_visual):
+    grilla = np.array(grilla_visual)
+    cmap = plt.cm.get_cmap("Set1", 5)
     fig, ax = plt.subplots(figsize=(5, 5))
     cax = ax.matshow(grilla, cmap=cmap)
 
@@ -23,11 +17,10 @@ def generar_imagen_grilla(ruta_salida, grilla):
         Patch(facecolor=cmap(4/5), label="Biofilm"),
     ]
     ax.legend(handles=leyenda, loc="upper right", bbox_to_anchor=(1.4, 1))
-
     ax.set_xticks([])
     ax.set_yticks([])
 
-    for i in range(10): #escribirle el numer
+    for i in range(10):
         for j in range(10):
             val = grilla[i, j]
             if val > 0:
@@ -35,5 +28,9 @@ def generar_imagen_grilla(ruta_salida, grilla):
 
     plt.title("Grilla bacteriana estilo paso 1)")
     plt.tight_layout()
-    plt.savefig(ruta_salida) 
+    
+    ruta_salida = "grilla_actual.png"
+    plt.savefig(ruta_salida)
     plt.close()
+
+    return ruta_salida

@@ -6,22 +6,31 @@ from hacerlagrilla import generar_imagen_grilla
 from simulador import Simulador
 from ambiente import Ambiente
 from grilla_visual import obtener_grilla_visual 
+from colonia import Colonia
+from grilla_visual import obtener_grilla_visual
+from gi.repository import GdkPixbuf
+import os
 
 class Ventana(Gtk.ApplicationWindow):
     def __init__(self, app):
         super().__init__(application=app)
 
-        # Crear el ambiente con tamaño 10x10 y nutrientes por defecto = 100
+        # crear el ambiente
         ambiente = Ambiente(ancho=10, alto=10)
 
-        # Inicializar bacterias (por ejemplo, 20 al comienzo)
-        ambiente.inicializar_bacterias(20)
+        # inicializar bacterias (por ejemplo, 20)
+        lista_bacterias = ambiente.inicializar_bacterias(20)
 
-        # Crear el simulador con ese ambiente
-        self.simulador = Simulador(ambiente)
+        # crear la colonia
+        colonia = Colonia(lista_bacterias)
 
-        # Guardar la colonia (solo por comodidad)
-        self.colonia = ambiente.colonia
+        # crear el simulador con ese ambiente y colonia
+        self.simulador = Simulador(ambiente, colonia)
+
+        # guardar referencias útiles
+        self.colonia = colonia
+        self.ambiente = ambiente
+
 #________________________________________________________________________________________________________
 
         self.set_title("Colonia Bacteriana")
@@ -48,13 +57,14 @@ class Ventana(Gtk.ApplicationWindow):
         menu_btn.set_menu_model(menu)
         header.pack_end(menu_btn)
 
-        # Imagen de la grilla
-        self.imagen = Gtk.Image()
-        self.imagen.set_hexpand(True)
-        self.imagen.set_vexpand(True)
+        # imagen para mostrar la grilla
+        self.img = Gtk.Image()
+        self.img.set_hexpand(True)
+        self.img.set_vexpand(True)
+
 
         caja = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        caja.append(self.imagen)
+        caja.append(self.img)
         self.set_child(caja)
 
         # Conectar acción del menú
@@ -67,28 +77,31 @@ class Ventana(Gtk.ApplicationWindow):
         return accion
 
     def on_siguiente_paso(self, boton):
-        print("Ejecutando paso de simulación...")
+        # ejecutar un paso de simulacion
+        self.simulador.run(1)
 
-        # ejecutar la simulación
-        self.colonia.paso()
 
-        # obtener la grilla visual en forma de números
-        matriz_visual = obtener_grilla_visual(self.colonia)
+        # convertir la grilla del ambiente en matriz visual
+        grilla_numerica = obtener_grilla_visual(self.ambiente.grilla)
+        ruta = generar_imagen_grilla(grilla_numerica)
 
-        # generar imagen PNG con esa grilla
-        ruta = "grilla_actual.png"
-        generar_imagen_grilla(ruta, matriz_visual)
+        # cargar la imagen en el Image widget
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file(ruta)
+        self.img.set_from_pixbuf(pixbuf)
+        ruta = generar_imagen_grilla(grilla_numerica)
 
-        # actualizar imagen mostrada en la ventana
-        self.imagen.set_from_file(ruta)
+        # cargar la imagen en el Image widget
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file(ruta)
+        self.img.set_from_pixbuf(pixbuf)
 
-        # contar cuántas bacterias siguen activas
-        cantidad_activas = 0  # contador inicializado en cero
-
+        # contar cantidad de bacterias activas
+        cantidad_activas = 0
         for b in self.colonia.bacterias:
             if b.estado == "activa":
-                cantidad_activas += 1  # sumamos 1 por cada activa
+                cantidad_activas += 1
 
+        # mostrar en el label
         self.lbl_cantidad.set_text(f"Cantidad activa: {cantidad_activas}")
+
 
 

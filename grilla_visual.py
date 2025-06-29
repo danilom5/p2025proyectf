@@ -1,4 +1,4 @@
-def obtener_grilla_visual(colonia):
+def obtener_grilla_visual(grilla_objetos):
     """
     Convierte la grilla del ambiente en una matriz de números enteros
     para poder graficar el estado actual de cada celda.
@@ -9,9 +9,9 @@ def obtener_grilla_visual(colonia):
     - 3: bacteria resistente
     """
 
-    # Obtenemos el tamaño del ambiente
-    filas = colonia.ambiente.alto
-    columnas = colonia.ambiente.ancho
+    filas = len(grilla_objetos)
+    columnas = len(grilla_objetos[0])
+
 
     # Creamos la matriz que vamos a llenar con los valores
     matriz_visual = []
@@ -23,7 +23,7 @@ def obtener_grilla_visual(colonia):
         # Recorremos cada columna de la fila actual
         for j in range(columnas):
             # Obtenemos el contenido de la celda actual
-            celda = colonia.ambiente.grilla[i][j]
+            celda = grilla_objetos[i][j]
 
             # Evaluamos qué hay en la celda
             if celda is None:
