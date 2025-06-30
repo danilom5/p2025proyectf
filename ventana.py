@@ -36,17 +36,22 @@ class Ventana(Gtk.ApplicationWindow):
         self.set_title("Colonia Bacteriana")
         self.set_default_size(800, 600)
 
-        header = Gtk.HeaderBar()
-        self.set_titlebar(header)
+        self.header = Gtk.HeaderBar()
+        self.set_titlebar(self.header)
 
         # Label cantidad inicial
         self.lbl_cantidad = Gtk.Label(label="Cantidad inicial: 0")
-        header.pack_start(self.lbl_cantidad)
+        self.header.pack_start(self.lbl_cantidad)
 
         # Botón siguiente paso
         btn_siguiente = Gtk.Button(label="Siguiente paso")
         btn_siguiente.connect("clicked", self.on_siguiente_paso)
-        header.pack_start(btn_siguiente)
+        self.header.pack_start(btn_siguiente)
+
+        # Botón ver gráfico
+        btn_grafico = Gtk.Button(label="Ver gráfico evolución")
+        btn_grafico.connect("clicked", self.on_ver_grafico)
+        self.header.pack_start(btn_grafico)
 
         # Menú hamburguesa
         menu = Gio.Menu()
@@ -55,7 +60,7 @@ class Ventana(Gtk.ApplicationWindow):
         menu_btn = Gtk.MenuButton()
         menu_btn.set_icon_name("open-menu-symbolic")
         menu_btn.set_menu_model(menu)
-        header.pack_end(menu_btn)
+        self.header.pack_end(menu_btn)
 
         # imagen para mostrar la grilla
         self.img = Gtk.Image()
@@ -102,6 +107,16 @@ class Ventana(Gtk.ApplicationWindow):
 
         # mostrar en el label
         self.lbl_cantidad.set_text(f"Cantidad activa: {cantidad_activas}")
+
+
+        
+
+    def on_ver_grafico(self):
+        self.simulador.graficar_evolucion()
+
+        import subprocess
+        subprocess.run(["xdg-open", "evolucion_colonia.png"])
+
 
 
 
