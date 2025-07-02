@@ -4,10 +4,10 @@ class Bacteria:
         """
         Constructor de Bacteria.
         - id_bacteria: Identificador unico para rastrear la bacteria (ej: b1,b2, o cualquier otro, para diferenciarse de una en otra).
-        - raza: Representa el tipo, A o B o C etc
+        - raza: Representa el tipo, A
         - energia: Energía inicial que tendrá la bacteria.
         - fila, columna: Posición en la grilla donde vive la bacteria
-        - resistente: Booleano que indica si tiene resistencia a factores ambientales como los antibioticos
+        - resistente: Booleano que indica si tiene resistencia a los antibioticos
         """
         self.id = id_bacteria
         self.raza = raza
@@ -56,6 +56,8 @@ class Bacteria:
         if self.energia < 10:
             print(f"{self.id} tiene energía muy baja ({self.energia}). Morirá por inanición.")
             self.morir()    
+#-------------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------
 
     def morir(self):
         """
@@ -64,7 +66,6 @@ class Bacteria:
         """
         self.estado = "muerta"
         print(f"{self.id} ha muerto.")
-
 
 #-------------------------------------------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------------------------------------------
@@ -162,7 +163,7 @@ class Bacteria:
 
         # Obtenemos el tamaño de la grilla
         cantidad_filas = len(self.ambiente.grilla)
-        cantidad_columnas = len(self.ambiente.grilla[0])
+        cantidad_columnas = len(self.ambiente.grilla[0])  
 
         # Revisar celda de arriba
         nueva_fila = self.fila - 1

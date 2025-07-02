@@ -1,4 +1,4 @@
-import gi
+import gi 
 gi.require_version("Gtk", "4.0")
 from gi.repository import Gtk, Gio
 from acerca import mostrar_acerca_de
@@ -7,9 +7,9 @@ from simulador import Simulador
 from ambiente import Ambiente
 from grilla_visual import obtener_grilla_visual 
 from colonia import Colonia
-from grilla_visual import obtener_grilla_visual
 from gi.repository import GdkPixbuf
 import os
+import subprocess
 
 class Ventana(Gtk.ApplicationWindow):
     def __init__(self, app):
@@ -56,6 +56,8 @@ class Ventana(Gtk.ApplicationWindow):
         # Menú hamburguesa
         menu = Gio.Menu()
         menu.append("Acerca de", "app.acerca")
+        menu.append("Exportar resultados", "app.exportar") 
+
 
         menu_btn = Gtk.MenuButton()
         menu_btn.set_icon_name("open-menu-symbolic")
@@ -75,6 +77,8 @@ class Ventana(Gtk.ApplicationWindow):
         # Conectar acción del menú
         app = self.get_application()
         app.add_action(self._crear_accion("acerca", lambda *a: mostrar_acerca_de(self)))
+        app.add_action(self._crear_accion("exportar", lambda *a: self.simulador.exportar_csv()))
+
 
     def _crear_accion(self, nombre, funcion):
         accion = Gio.SimpleAction.new(nombre, None)
@@ -109,14 +113,9 @@ class Ventana(Gtk.ApplicationWindow):
         self.lbl_cantidad.set_text(f"Cantidad activa: {cantidad_activas}")
 
 
-        
-
-    def on_ver_grafico(self):
+    def on_ver_grafico(self, botton):
         self.simulador.graficar_evolucion()
-
-        import subprocess
         subprocess.run(["xdg-open", "evolucion_colonia.png"])
-
 
 
 

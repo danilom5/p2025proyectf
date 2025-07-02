@@ -30,12 +30,6 @@ class Ambiente:
                 fila_nutrientes.append(nivel_nutriente)  # cada celda parte con 100 por defecto
             self.nutrientes.append(fila_nutrientes)
 
-        # por ahora queda en none
-        self.factor_ambiental = None
-
-        # lo mismo, pero la dejaré creada
-        self.colonia = None
-
 #---------------------------------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------------------------------
     def inicializar_bacterias(self, cantidad):

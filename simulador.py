@@ -62,3 +62,7 @@ class Simulador:
         plt.close()
 
         print("se generó la gráfica 'evolucion_colonia.png'")
+
+
+    def exportar_csv(self):
+        self.colonia.exportar_csv("estado_colonia.csv")
